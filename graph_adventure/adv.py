@@ -23,7 +23,12 @@ player = Player("Name", world.startingRoom)
 # FILL THIS IN
 traversalPath = ['n', 's']
 # create a graph of the rooms we've visited
-room_graph = {}
+player_graph = {}
+
+
+# this should probably be a while loop that checks to see if our player_graph contains all of the 
+# available rooms because if it doesn't we still need to keep traversing the maze but then once
+# it does we'll break from it
 
 # starting with the current room
 # we need to add the player's current room into the room_graph
@@ -36,6 +41,41 @@ room_graph = {}
 # we then need to add the room we're moving into, to our room_graph
 # but only if we haven't been there before -- so we'll need to check for that
 # and then take the question mark off of the room's exit direction because we've visited it
+# how do we link up the exits with the rooms they lead into ...? this will replace the question mark...
+
+
+# we'll need to get back to the closest room that has an unvisited exit
+# if we do a bfs and use it in the code above as a function it will work
+def visited_path(self, vertex)
+    # create an empty queue
+    queue = []
+    # add the starting room to the queue
+    queue.append([vertex])
+    visited = set()
+       
+    while queue:
+        # dequeue the first path
+        path = queue.pop(0)
+        # assign v to the last vertex from the path
+        v = path[-1]
+        # if it has not been visited yet ...
+        if v not in visited:
+            # mark it as visited by adding it to visited
+            visited.add(v)
+            for rm_exit in self[v]:
+                # check to see if the exit of the visited room is a ? (or unvisited)
+                if self[v][rm_exit] === ?
+                    # if it is we return the path back to there
+                    return path
+            
+            # then enqueue paths to each of its neighboring rooms to the queue
+            for next_rm in self[v]:
+                neighboring_room = self[v][next_rm]
+                path_copy = path.copy()
+                path_copy.append(neighboring_room)
+                queue.append(path_copy)
+        
+        return None
 
 
 # TRAVERSAL TEST
