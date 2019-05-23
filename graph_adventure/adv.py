@@ -21,7 +21,7 @@ player = Player("Name", world.startingRoom)
 
 
 # FILL THIS IN
-traversalPath = ['n', 's']
+traversalPath = []
 # create a graph of the rooms we've visited
 player_graph = {}
 
@@ -31,12 +31,18 @@ player_graph = {}
 # it does we'll break from it
 
 # starting with the current room
-# we need to add the player's current room into the room_graph
-# along with all of the possible exits in the current room
-# and whether or not we've been through those exits
+current_room = player.currentRoom.id
+# we need to add the player's current room into the room_graph if it's not there already
+if current_room not in player_graph:
+    player_graph[current_room] = {}
+    # along with all of the possible exits in the current room
+    for exit in player.currentRoom.getExits():
+        # and the fact that we haven't visited those exits (?)
+        player_graph[current_room][exit] = '?'
+    print(player_graph)
 
 # if in the current room there is an exit direction that we haven't visited
-# we want to go in that direction
+# we want to go in that direction (use player travel function?)
 # and add that to our traversalPath (needs to be a direction)
 # we then need to add the room we're moving into, to our room_graph
 # but only if we haven't been there before -- so we'll need to check for that
@@ -46,36 +52,36 @@ player_graph = {}
 
 # we'll need to get back to the closest room that has an unvisited exit
 # if we do a bfs and use it in the code above as a function it will work
-def visited_path(self, vertex)
-    # create an empty queue
-    queue = []
-    # add the starting room to the queue
-    queue.append([vertex])
-    visited = set()
+# def visited_path(self, vertex)
+#     # create an empty queue
+#     queue = []
+#     # add the starting room to the queue
+#     queue.append([vertex])
+#     visited = set()
        
-    while queue:
-        # dequeue the first path
-        path = queue.pop(0)
-        # assign v to the last vertex from the path
-        v = path[-1]
-        # if it has not been visited yet ...
-        if v not in visited:
-            # mark it as visited by adding it to visited
-            visited.add(v)
-            for rm_exit in self[v]:
-                # check to see if the exit of the visited room is a ? (or unvisited)
-                if self[v][rm_exit] === ?
-                    # if it is we return the path back to there
-                    return path
+#     while queue:
+#         # dequeue the first path
+#         path = queue.pop(0)
+#         # assign v to the last vertex from the path
+#         v = path[-1]
+#         # if it has not been visited yet ...
+#         if v not in visited:
+#             # mark it as visited by adding it to visited
+#             visited.add(v)
+#             for rm_exit in self[v]:
+#                 # check to see if the exit of the visited room is a ? (or unvisited)
+#                 if self[v][rm_exit] === ?
+#                     # if it is we return the path back to there
+#                     return path
             
-            # then enqueue paths to each of its neighboring rooms to the queue
-            for next_rm in self[v]:
-                neighboring_room = self[v][next_rm]
-                path_copy = path.copy()
-                path_copy.append(neighboring_room)
-                queue.append(path_copy)
+#             # then enqueue paths to each of its neighboring rooms to the queue
+#             for next_rm in self[v]:
+#                 neighboring_room = self[v][next_rm]
+#                 path_copy = path.copy()
+#                 path_copy.append(neighboring_room)
+#                 queue.append(path_copy)
         
-        return None
+#         return None
 
 
 # TRAVERSAL TEST
