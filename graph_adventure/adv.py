@@ -26,6 +26,39 @@ traversalPath = []
 player_graph = {}
 
 
+# we'll need to get back to the closest room that has an unvisited exit
+# if we do a bfs and use it in the code above as a function it will work
+def bfs_visited_path(player_graph, startingRoom):
+    # create an empty queue
+    queue = []
+    # add the starting room to the queue
+    queue.append([startingRoom])
+    visited = set()
+       
+    while queue:
+        # dequeue the first path
+        path = queue.pop(0)
+        # assign v to the last vertex from the path
+        v = path[-1]
+        # if it has not been visited yet ...
+        if v not in visited:
+            # mark it as visited by adding it to visited
+            visited.add(v)
+            for rm_exit in player_graph[v]:
+                # check to see if the exit of the visited room is a ? (or unvisited)
+                if player_graph[v][rm_exit] == "?":
+                    # if it is we return the path back to there
+                    return path
+            
+            # then enqueue paths to each of its neighboring rooms to the queue
+            for next_rm in player_graph[v]:
+                neighboring_room = player_graph[v][next_rm]
+                new_path = list(path)
+                new_path.append(neighboring_room)
+                queue.append(new_path)  
+    return None
+
+
 # a helper function to direct the player to the opposite exit
 def opposite_direction(direction):
     if direction == "n":
@@ -50,13 +83,13 @@ while len(player_graph) != len(roomGraph):
         # along with all of the possible exits in the current room
         for x in player.currentRoom.getExits():
             # and the fact that we haven't visited those exits (assign a ?)
-            player_graph[current_room][x] = '?'
+            player_graph[current_room][x] = "?"
 
     # for player movement we'll start out with the direction to move equal to none and change it
     direction = None
     for exit_direction in player_graph[current_room]:
         # if in the current room there is an exit direction that we haven't visited
-        if player_graph[current_room][exit_direction] == '?':
+        if player_graph[current_room][exit_direction] == "?":
             # we want to go in that direction
             direction = exit_direction
             if direction is not None:
@@ -72,50 +105,24 @@ while len(player_graph) != len(roomGraph):
                     # along with all of the possible exits in the current room
                     for x in player.currentRoom.getExits():
                         # and the fact that we haven't visited those exits (assign a ?)
-                        player_graph[new_room][x] = '?'
+                        player_graph[new_room][x] = "?"
             # we assign the current room's exit as visited in the player_graph
             player_graph[current_room][direction] = new_room
-            # we assign our player the opposite exit to explore -
-            # by setting it as the current room
+            # we assign our player the opposite exit as something they've explored -
+            # by setting it as the current room and giving it a room id
             player_graph[new_room][opposite_direction(direction)] = current_room
             # our current room is now our new room
             current_room = new_room
             break
-    # if there are no ? left on the traversal we call our bfs ... 
-    print(player_graph)
+    # if there are no ? left on the current traversal branch we call our bfs ... 
+    explored_path = bfs_visited_path(player_graph, player.currentRoom.id)
+    print("So far we've visited:", player_graph)
+    print("Our traversal path is:", traversalPath)
+    # we get the path back to the nearest unexplored room/exit
+    print("Our path back to the nearest unexplored room:", explored_path)
+    current_room = explored_path[len(explored_path) - 1]
+    print(current_room)
 
-# we'll need to get back to the closest room that has an unvisited exit
-# if we do a bfs and use it in the code above as a function it will work
-# def visited_path(self, vertex)
-#     # create an empty queue
-#     queue = []
-#     # add the starting room to the queue
-#     queue.append([vertex])
-#     visited = set()
-       
-#     while queue:
-#         # dequeue the first path
-#         path = queue.pop(0)
-#         # assign v to the last vertex from the path
-#         v = path[-1]
-#         # if it has not been visited yet ...
-#         if v not in visited:
-#             # mark it as visited by adding it to visited
-#             visited.add(v)
-#             for rm_exit in self[v]:
-#                 # check to see if the exit of the visited room is a ? (or unvisited)
-#                 if self[v][rm_exit] === ?
-#                     # if it is we return the path back to there
-#                     return path
-            
-#             # then enqueue paths to each of its neighboring rooms to the queue
-#             for next_rm in self[v]:
-#                 neighboring_room = self[v][next_rm]
-#                 path_copy = path.copy()
-#                 path_copy.append(neighboring_room)
-#                 queue.append(path_copy)
-        
-#         return None
 
 
 # TRAVERSAL TEST
