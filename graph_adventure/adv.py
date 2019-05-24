@@ -17,7 +17,7 @@ roomGraph={494: [(1, 8), {'e': 457}], 492: [(1, 20), {'e': 400}], 493: [(2, 5), 
 
 world.loadGraph(roomGraph)
 world.printRooms()
-input("press button to continue...")
+# input("Press button to continue...")
 player = Player("Name", world.startingRoom)
 
 
@@ -28,7 +28,7 @@ player_graph = {}
 
 
 # we'll need to get back to the closest room that has an unvisited exit
-# if we do a bfs and use it in the code above as a function it will work
+# if we do a bfs and use it in the code below as a function it will work
 def bfs_visited_path(player_graph, startingRoom):
     # create an empty queue
     queue = []
@@ -60,7 +60,7 @@ def bfs_visited_path(player_graph, startingRoom):
     return None
 
 
-# a helper function to direct the player to the opposite exit
+# a helper function to assign the room's id in the player_graph to the correct direction
 def opposite_direction(direction):
     if direction == "n":
         return "s"
@@ -79,7 +79,7 @@ def opposite_direction(direction):
 # starting with the current room
 current_room = player.currentRoom.id
 while len(player_graph) != len(roomGraph):
-    print("Restarting loop")
+    # print("Restarting loop")
     
     # we need to add the player's current room into the room_graph if it's not there already
     if current_room not in player_graph:
@@ -91,14 +91,14 @@ while len(player_graph) != len(roomGraph):
 
     # for player movement we'll start out with the direction to move equal to none and change it as we move
     direction = None
-    print("My current room:", player_graph[current_room])
+    # print("My current room:", player_graph[current_room])
     for exit_direction in player_graph[current_room]:
-        print("Looking at exit", exit_direction, player_graph[current_room][exit_direction] )
+        # print("Looking at exit", exit_direction, player_graph[current_room][exit_direction])
         # if in the current room there is an exit direction that we haven't visited
         if player_graph[current_room][exit_direction] == "?":
             # we want to go in that direction
             direction = exit_direction
-            print("We are moving", direction)
+            # print("We are moving", direction)
             if direction is not None:
                 # use player travel function
                 player.travel(direction)
@@ -126,15 +126,15 @@ while len(player_graph) != len(roomGraph):
     # print("So far we've visited:", player_graph)
     # print("Our traversal path is:", traversalPath)
     # we get the path back to the nearest unexplored room/exit
-    print("Our path back to the nearest unexplored room:", explored_path)
-    # if there's nowhere to go back to, we won't move otherwise...
+    # print("Our path back to the nearest unexplored room:", explored_path)
+    # if there's nowhere to go back to, we won't move -- otherwise...
     if explored_path != None:
         # if our bfs path array is greater than 1
         if len(explored_path) > 1:
             # we look for the correct exit in the path and take it
             for exit_direction in player_graph[current_room]:
                 if player_graph[current_room][exit_direction] in explored_path:
-                    print("I need to go", exit_direction)
+                    # print("I need to go", exit_direction)
                     player.travel(exit_direction)
                     traversalPath.append(exit_direction)
                     current_room = player.currentRoom.id
@@ -142,7 +142,7 @@ while len(player_graph) != len(roomGraph):
         else:
             # if we are in the nearest room with unexplored exits, we start exploring again
             current_room = player.currentRoom.id
-            print("I'm ready to explore again", current_room)
+            # print("I'm ready to explore again", current_room)
         
     
 
